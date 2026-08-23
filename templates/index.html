@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRAVELIQ — AI Travel Research, Place Locations & Nearby Food Spots</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- Marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navbar -->
+        <header class="app-header">
+            <div class="header-brand">
+                <div class="brand-icon">✈️</div>
+                <div class="brand-text">
+                    <h1>TRAVELIQ</h1>
+                    <span class="brand-tag">AI Travel Research, Place Locations & Nearby Food Finder</span>
+                </div>
+            </div>
+            <div class="header-subtitle">
+                <span class="motto">"Exact Place Locations • Distance in KM • Nearby Food Spots"</span>
+            </div>
+            <div class="header-status">
+                <div id="systemHealthBadge" class="status-badge ready">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Location & Food Engine Ready</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- State Selector Bar with 16 Top Famous States -->
+        <section class="state-selector-banner">
+            <div class="banner-label">
+                <span class="icon">📍</span>
+                <span>SELECT STATE:</span>
+            </div>
+            <div class="state-pills-row" id="statePillsRow">
+                <button class="state-pill active" data-state="andhra_pradesh">
+                    <span class="state-icon">🏛️</span>
+                    <span class="state-name">Andhra Pradesh</span>
+                </button>
+                <button class="state-pill" data-state="kerala">
+                    <span class="state-icon">🌴</span>
+                    <span class="state-name">Kerala</span>
+                </button>
+                <button class="state-pill" data-state="goa">
+                    <span class="state-icon">🏖️</span>
+                    <span class="state-name">Goa</span>
+                </button>
+                <button class="state-pill" data-state="rajasthan">
+                    <span class="state-icon">🏰</span>
+                    <span class="state-name">Rajasthan</span>
+                </button>
+                <button class="state-pill" data-state="uttarakhand">
+                    <span class="state-icon">🌊</span>
+                    <span class="state-name">Uttarakhand</span>
+                </button>
+                <button class="state-pill" data-state="kashmir_ladakh">
+                    <span class="state-icon">🏔️</span>
+                    <span class="state-name">Kashmir & Ladakh</span>
+                </button>
+                <button class="state-pill" data-state="maharashtra">
+                    <span class="state-icon">🌆</span>
+                    <span class="state-name">Maharashtra</span>
+                </button>
+                <button class="state-pill" data-state="gujarat">
+                    <span class="state-icon">🦁</span>
+                    <span class="state-name">Gujarat</span>
+                </button>
+                <button class="state-pill" data-state="uttar_pradesh">
+                    <span class="state-icon">🕌</span>
+                    <span class="state-name">Uttar Pradesh</span>
+                </button>
+                <button class="state-pill" data-state="west_bengal_sikkim">
+                    <span class="state-icon">🫖</span>
+                    <span class="state-name">Bengal & Sikkim</span>
+                </button>
+                <button class="state-pill" data-state="karnataka">
+                    <span class="state-icon">☕</span>
+                    <span class="state-name">Karnataka</span>
+                </button>
+                <button class="state-pill" data-state="tamil_nadu">
+                    <span class="state-icon">🛕</span>
+                    <span class="state-name">Tamil Nadu</span>
+                </button>
+                <button class="state-pill" data-state="himachal_pradesh">
+                    <span class="state-icon">❄️</span>
+                    <span class="state-name">Himachal Pradesh</span>
+                </button>
+                <button class="state-pill" data-state="madhya_pradesh">
+                    <span class="state-icon">🐅</span>
+                    <span class="state-name">Madhya Pradesh</span>
+                </button>
+                <button class="state-pill" data-state="odisha">
+                    <span class="state-icon">☀️</span>
+                    <span class="state-name">Odisha</span>
+                </button>
+                <button class="state-pill" data-state="meghalaya">
+                    <span class="state-icon">☁️</span>
+                    <span class="state-name">Meghalaya</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Main Dashboard Grid -->
+        <main class="dashboard-grid">
+            <!-- Left Column: Trip Parameters & State Explorer Highlights -->
+            <aside class="sidebar-column">
+                
+                <!-- 1. Trip Parameters Card -->
+                <div class="card travel-inputs-card">
+                    <div class="card-header">
+                        <h2><span class="icon">🧭</span> Trip Parameters</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="stateSelectDropdown">Destination State</label>
+                            <div class="input-with-icon">
+                                <span class="field-icon">📍</span>
+                                <select id="stateSelectDropdown" class="form-select">
+                                    <option value="andhra_pradesh">Andhra Pradesh (Vizag, Araku, Gandikota, Tirupati)</option>
+                                    <option value="kerala">Kerala (Munnar, Alleppey Backwaters, Kochi, Varkala)</option>
+                                    <option value="goa">Goa (Beaches, Forts, Old Goa, Heritage)</option>
+                                    <option value="rajasthan">Rajasthan (Jaipur, Udaipur, Jaisalmer Desert)</option>
+                                    <option value="uttarakhand">Uttarakhand (Rishikesh, Nainital, Mussoorie, Auli)</option>
+                                    <option value="kashmir_ladakh">Kashmir & Ladakh (Dal Lake, Gulmarg, Pangong, Nubra)</option>
+                                    <option value="maharashtra">Maharashtra (Mumbai, Ajanta-Ellora, Lonavala)</option>
+                                    <option value="gujarat">Gujarat (Rann of Kutch, Gir Lions, Statue of Unity)</option>
+                                    <option value="uttar_pradesh">Uttar Pradesh (Taj Mahal, Varanasi Ghats, Ayodhya)</option>
+                                    <option value="west_bengal_sikkim">West Bengal & Sikkim (Darjeeling, Gangtok, Kolkata)</option>
+                                    <option value="karnataka">Karnataka (Hampi, Coorg, Mysore, Gokarna)</option>
+                                    <option value="tamil_nadu">Tamil Nadu (Mahabalipuram, Madurai, Ooty)</option>
+                                    <option value="himachal_pradesh">Himachal Pradesh (Manali, Shimla, Dharamshala, Spiti)</option>
+                                    <option value="madhya_pradesh">Madhya Pradesh (Khajuraho, Kanha Tigers, Ujjain)</option>
+                                    <option value="odisha">Odisha (Puri Jagannath, Konark Sun Temple, Chilika)</option>
+                                    <option value="meghalaya">Meghalaya (Living Root Bridges, Dawki, Cherrapunji)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group half">
+                                <label for="durationInput">Duration</label>
+                                <div class="input-with-icon">
+                                    <span class="field-icon">📅</span>
+                                    <input type="number" id="durationInput" min="1" max="30" value="4">
+                                    <span class="unit-tag">days</span>
+                                </div>
+                            </div>
+                            <div class="form-group half">
+                                <label for="budgetInput">Budget (INR)</label>
+                                <div class="input-with-icon">
+                                    <span class="field-icon">₹</span>
+                                    <input type="text" id="budgetInput" placeholder="e.g. 15,000" value="18,000">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Travel Interests</label>
+                            <div class="interests-grid" id="interestsContainer">
+                                <label class="interest-chip active">
+                                    <input type="checkbox" value="Heritage & History" checked>
+                                    <span>🏛️ History</span>
+                                </label>
+                                <label class="interest-chip active">
+                                    <input type="checkbox" value="Beaches & Lakes" checked>
+                                    <span>🏖️ Beaches</span>
+                                </label>
+                                <label class="interest-chip active">
+                                    <input type="checkbox" value="Authentic Cuisine" checked>
+                                    <span>🍲 Food</span>
+                                </label>
+                                <label class="interest-chip">
+                                    <input type="checkbox" value="Nature & Wildlife">
+                                    <span>🌿 Nature</span>
+                                </label>
+                                <label class="interest-chip">
+                                    <input type="checkbox" value="Adventure & Trekking">
+                                    <span>🧗 Adventure</span>
+                                </label>
+                                <label class="interest-chip">
+                                    <input type="checkbox" value="Spiritual & Temples">
+                                    <span>🛕 Temples</span>
+                                </label>
+                                <label class="interest-chip">
+                                    <input type="checkbox" value="Local Culture & Shopping">
+                                    <span>🛍️ Culture</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button id="generateTripBtn" class="btn btn-primary btn-block">
+                            <span class="btn-icon">🗺️</span>
+                            <span>Generate Trip with Locations & Food</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2. State Quick Guide & Place/Food Highlights Card -->
+                <div class="card state-guide-card">
+                    <div class="card-header">
+                        <h2 id="guideStateTitle"><span class="icon">📍</span> Places, Locations & Nearby Food</h2>
+                    </div>
+                    <div class="card-body">
+                        <p id="guideTagline" class="guide-tagline">"Discover destinations with exact locations, distances in km, and nearby food spots."</p>
+                        
+                        <div class="guide-key-facts">
+                            <div class="fact-chip">
+                                <span class="fact-icon">📅</span>
+                                <div class="fact-text">
+                                    <span class="fact-title">Best Season</span>
+                                    <span id="factSeason" class="fact-val">Oct - Mar</span>
+                                </div>
+                            </div>
+                            <div class="fact-chip">
+                                <span class="fact-icon">⏱️</span>
+                                <div class="fact-text">
+                                    <span class="fact-title">Ideal Trip</span>
+                                    <span id="factDuration" class="fact-val">4 to 7 Days</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Top Destinations with Location & Food -->
+                        <div class="guide-section">
+                            <div class="guide-section-title">🗺️ Top Places & Nearby Food Spots</div>
+                            <div id="guideDestinationsList" class="guide-dest-list"></div>
+                        </div>
+
+                        <!-- Culinary Highlights -->
+                        <div class="guide-section">
+                            <div class="guide-section-title">🍲 Must-Try Traditional Dishes</div>
+                            <div id="guideFoodList" class="guide-food-tags"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </aside>
+
+            <!-- Right Column: Interactive Chat & Personalized Itinerary View -->
+            <section class="main-content-column">
+                <div class="card chat-workspace-card">
+                    <!-- Workspace Header & Tab Controls -->
+                    <div class="workspace-header">
+                        <div class="workspace-tabs">
+                            <button class="tab-btn active" id="tabChatBtn">💬 AI Travel, Location & Food Assistant</button>
+                            <button class="tab-btn" id="tabPlanBtn">📋 Day-by-Day Itinerary</button>
+                        </div>
+                        <div class="current-state-badge">
+                            <span id="activeStateBadge">📍 Andhra Pradesh</span>
+                        </div>
+                    </div>
+
+                    <!-- TAB 1: Chat View -->
+                    <div id="chatViewContainer" class="workspace-tab-content active">
+                        <!-- Quick Question Chips -->
+                        <div class="quick-prompts-bar">
+                            <span class="quick-title">Quick Search:</span>
+                            <button class="prompt-chip" data-query="List top places with their exact location, distance in km, and nearby famous food spots.">📍 Places, Locations & Food in KM</button>
+                            <button class="prompt-chip" data-query="What are the best nearby restaurants, their exact locations, and distance in km?">🍲 Nearby Food & Distances</button>
+                            <button class="prompt-chip" data-query="What are the distances and travel times between major attractions in this state?">🚗 Distances & Transit</button>
+                            <button class="prompt-chip" data-query="What is the estimated budget per day and cost breakdown?">💰 Budget in INR</button>
+                            <button class="prompt-chip" data-query="What important safety rules and temple dress codes should I know?">⚠️ Rules & Safety</button>
+                        </div>
+
+                        <!-- Chat Messages Stream -->
+                        <div class="chat-messages-stream" id="chatMessagesStream">
+                            <!-- Welcome Bot Message -->
+                            <div class="message-bubble bot-message">
+                                <div class="message-avatar">✈️</div>
+                                <div class="message-content-wrapper">
+                                    <div class="message-author">TRAVELIQ Assistant</div>
+                                    <div class="message-text">
+                                        <p>👋 Welcome to <strong>TRAVELIQ</strong>! I provide detailed travel intelligence with <strong>Exact Place Locations</strong>, <strong>Distances in Kilometers (km)</strong>, and <strong>Nearby Famous Food Spots & Restaurants</strong> across 16 iconic Indian states.</p>
+                                        <p>Select any state above or ask me about attractions, exact addresses, road distances in km, and local culinary hotspots!</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chat Input Area -->
+                        <div class="chat-input-area">
+                            <form id="chatForm" class="chat-input-form">
+                                <div class="chat-input-wrapper">
+                                    <textarea id="chatInput" rows="1" placeholder="Search places, exact locations, distance in km, or nearby food spots..." required></textarea>
+                                    <button type="submit" id="sendBtn" class="btn btn-send" title="Send message">
+                                        <span>Send</span>
+                                        <span class="send-arrow">➔</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: Dedicated Personalized Itinerary View -->
+                    <div id="planViewContainer" class="workspace-tab-content">
+                        <div class="itinerary-viewport" id="itineraryViewport">
+                            <div class="empty-plan-state" id="emptyPlanState">
+                                <div class="empty-icon">🗺️</div>
+                                <h3>No Itinerary Generated Yet</h3>
+                                <p>Select your state, duration, budget, and interests, then click <strong>"Generate Trip with Locations & Food"</strong>.</p>
+                            </div>
+                            <div class="plan-render-area hidden" id="planRenderArea">
+                                <div class="plan-header-strip">
+                                    <div class="plan-title-info">
+                                        <h2 id="planDestinationTitle">Curated State Itinerary</h2>
+                                        <div class="plan-meta-tags" id="planMetaTags"></div>
+                                    </div>
+                                    <div class="plan-actions">
+                                        <button id="copyPlanBtn" class="btn btn-secondary btn-sm">📋 Copy Plan</button>
+                                        <button id="printPlanBtn" class="btn btn-secondary btn-sm">🖨️ Print / Save</button>
+                                    </div>
+                                </div>
+                                <div class="plan-content-markdown" id="planContentMarkdown"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+
+        <!-- Toast Container -->
+        <div id="toastNotification" class="toast-container hidden">
+            <span id="toastIcon" class="toast-icon">ℹ️</span>
+            <span id="toastMessage" class="toast-message">Notification</span>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
