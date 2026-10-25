@@ -165,43 +165,69 @@ document.addEventListener("DOMContentLoaded", () => {
         factDuration.textContent = st.ideal_duration || '4 to 7 Days';
         activeStateBadge.textContent = `📍 ${st.name}`;
 
-        // Top destinations with Location, KM & Nearby Food
+        // Top destinations with Location, KM & Extended Nearby Food Places
         guideDestinationsList.innerHTML = "";
         (st.top_destinations || []).forEach(d => {
             const item = document.createElement("div");
-            item.className = "guide-dest-item";
-            
+            item.className = "guide-dest-card";
+
+            // Format highlights
+            let highlightsHtml = "";
+            if (d.highlights && d.highlights.length > 0) {
+                const highlightPills = d.highlights.slice(0, 3).map(h => `<span class="highlight-pill">• ${h}</span>`).join(" ");
+                highlightsHtml = `<div class="dest-highlights-row">${highlightPills}</div>`;
+            }
+
+            // Format all nearby food spots in extended cards
             let foodHtml = "";
             if (d.nearby_food_places && d.nearby_food_places.length > 0) {
-                const firstFood = d.nearby_food_places[0];
+                const foodCards = d.nearby_food_places.map(f => `
+                    <div class="food-spot-card">
+                        <div class="food-spot-header">
+                            <span class="food-spot-name">🍲 ${f.name}</span>
+                            <span class="food-spot-dist">🚗 ${f.distance_km}</span>
+                        </div>
+                        <div class="food-spot-loc">📍 ${f.location}</div>
+                        <div class="food-spot-spec">✨ <strong>Must-Try:</strong> ${f.specialty}</div>
+                    </div>
+                `).join("");
+
                 foodHtml = `
-                    <div style="margin-top:4px; padding-top:4px; border-top:1px dashed #cbd5e1; font-size:0.73rem; color:#b45309;">
-                        🍲 <strong>Nearby Food (${firstFood.distance_km}):</strong> ${firstFood.name} — <em>${firstFood.specialty}</em>
+                    <div class="nearby-food-container">
+                        <div class="nearby-food-title">🍽️ NEARBY FAMOUS FOOD SPOTS (${d.nearby_food_places.length})</div>
+                        <div class="food-spots-list">${foodCards}</div>
                     </div>
                 `;
             }
 
             item.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div class="dest-card-header">
                     <span class="guide-dest-cat">${d.category || 'Attraction'}</span>
-                    <span style="font-size:0.68rem; color:#0369a1; font-weight:700;">📍 Location Verified</span>
+                    <span class="verified-badge">✓ Location Verified</span>
                 </div>
-                <strong style="color:#0f172a; font-size:0.83rem;">${d.name}</strong>
-                <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">
-                    📌 <strong>Location:</strong> ${d.exact_location || 'City Area'}<br/>
-                    🚗 <strong>Distance:</strong> ${d.distance_from_hub || 'Direct road access'}
+                <h3 class="dest-title">${d.name}</h3>
+                <div class="dest-meta-block">
+                    <div class="dest-meta-item">
+                        <span class="meta-icon">📌</span>
+                        <span><strong>Location:</strong> ${d.exact_location || 'City Area'}</span>
+                    </div>
+                    <div class="dest-meta-item">
+                        <span class="meta-icon">🚗</span>
+                        <span><strong>Distance:</strong> ${d.distance_from_hub || 'Direct road access'}</span>
+                    </div>
                 </div>
+                ${highlightsHtml}
                 ${foodHtml}
             `;
             guideDestinationsList.appendChild(item);
         });
 
-        // Food tags
+        // Extended Food Tags (Authentic Traditional Cuisine)
         guideFoodList.innerHTML = "";
-        (st.authentic_cuisine || []).slice(0, 5).forEach(f => {
+        (st.authentic_cuisine || []).forEach(f => {
             const pill = document.createElement("span");
-            pill.className = "food-pill";
-            pill.textContent = `🍲 ${f.split('(')[0].split('with')[0].trim()}`;
+            pill.className = "food-pill extended-food-pill";
+            pill.innerHTML = `🍲 ${f}`;
             guideFoodList.appendChild(pill);
         });
 
@@ -266,7 +292,9 @@ document.addEventListener("DOMContentLoaded", () => {
         appendChatMessage("user", question);
         state.conversationHistory.push({ role: "user", content: question });
         chatInput.value = "";
-        chatInput.style.height = "auto";
+        if (chatInput.tagName.toLowerCase() === "textarea") {
+            chatInput.style.height = "auto";
+        }
 
         state.isChatLoading = true;
         sendBtn.disabled = true;
@@ -335,15 +363,18 @@ document.addEventListener("DOMContentLoaded", () => {
         chatInput.focus();
     });
 
-    // Auto-grow textarea
-    chatInput.addEventListener("input", () => {
-        chatInput.style.height = "auto";
-        chatInput.style.height = Math.min(chatInput.scrollHeight, 100) + "px";
-    });
+    // Auto-grow if textarea
+    if (chatInput.tagName.toLowerCase() === "textarea") {
+        chatInput.addEventListener("input", () => {
+            chatInput.style.height = "auto";
+            chatInput.style.height = Math.min(chatInput.scrollHeight, 100) + "px";
+        });
+    }
 
     // Quick Prompts Chips
     document.querySelectorAll(".prompt-chip").forEach(chip => {
         chip.addEventListener("click", () => {
+            switchTab("chat");
             chatInput.value = chip.getAttribute("data-query");
             chatInput.focus();
             chatForm.dispatchEvent(new Event("submit"));

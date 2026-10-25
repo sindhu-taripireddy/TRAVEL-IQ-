@@ -6,14 +6,14 @@
     <title>TRAVELIQ — AI Travel Research, Place Locations & Nearby Food Spots</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/style.css">
     <!-- Marked.js for Markdown parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <div class="app-container">
-        <!-- Top Navbar -->
+        <!-- Top Navbar Header -->
         <header class="app-header">
             <div class="header-brand">
                 <div class="brand-icon">✈️</div>
@@ -32,6 +32,32 @@
                 </div>
             </div>
         </header>
+
+        <!-- Hero Travel Search Bar (Prominent Top Search Section) -->
+        <section class="hero-search-section">
+            <form id="chatForm" class="hero-search-form">
+                <div class="hero-search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="chatInput" placeholder="Search places, exact locations, road distance in km, or nearby famous food spots..." autocomplete="off" required>
+                    <button type="submit" id="sendBtn" class="btn btn-search-hero" title="Search places & food">
+                        <span class="btn-text">Search</span>
+                        <span class="send-arrow">➔</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Quick Suggestion Question Chips -->
+            <div class="hero-quick-prompts">
+                <span class="quick-title">⚡ Quick Search:</span>
+                <div class="quick-prompts-bar">
+                    <button class="prompt-chip" data-query="List top places with their exact location, distance in km, and nearby famous food spots.">📍 Places & Food in KM</button>
+                    <button class="prompt-chip" data-query="What are the best nearby restaurants, their exact locations, and distance in km?">🍲 Nearby Food & Distances</button>
+                    <button class="prompt-chip" data-query="What are the distances and travel times between major attractions in this state?">🚗 Distances & Transit</button>
+                    <button class="prompt-chip" data-query="What is the estimated budget per day and cost breakdown?">💰 Budget in INR</button>
+                    <button class="prompt-chip" data-query="What important safety rules and temple dress codes should I know?">⚠️ Rules & Safety</button>
+                </div>
+            </div>
+        </section>
 
         <!-- State Selector Bar with 16 Top Famous States -->
         <section class="state-selector-banner">
@@ -109,7 +135,65 @@
 
         <!-- Main Dashboard Grid -->
         <main class="dashboard-grid">
-            <!-- Left Column: Trip Parameters & State Explorer Highlights -->
+            <!-- Primary Left / Main Column: Travel Assistant Directly Below Search Bar -->
+            <section class="assistant-main-column">
+                <div class="card assistant-workspace-card">
+                    <!-- Workspace Header & Tab Controls -->
+                    <div class="workspace-header">
+                        <div class="workspace-tabs">
+                            <button class="tab-btn active" id="tabChatBtn">💬 AI Travel Assistant</button>
+                            <button class="tab-btn" id="tabPlanBtn">📋 Day-by-Day Itinerary</button>
+                        </div>
+                        <div class="current-state-badge">
+                            <span id="activeStateBadge">📍 Andhra Pradesh</span>
+                        </div>
+                    </div>
+
+                    <!-- TAB 1: Chat Stream View (Positioned Directly Below Top Search Bar) -->
+                    <div id="chatViewContainer" class="workspace-tab-content active">
+                        <div class="chat-messages-stream" id="chatMessagesStream">
+                            <!-- Welcome Bot Message -->
+                            <div class="message-bubble bot-message">
+                                <div class="message-avatar">✈️</div>
+                                <div class="message-content-wrapper">
+                                    <div class="message-author">TRAVELIQ Assistant</div>
+                                    <div class="message-text">
+                                        <p>👋 Welcome to <strong>TRAVELIQ</strong>! I provide detailed travel intelligence with <strong>Exact Place Locations</strong>, <strong>Distances in Kilometers (km)</strong>, and <strong>Nearby Famous Food Spots & Restaurants</strong> across 16 iconic Indian states.</p>
+                                        <p>Type any destination, attraction, or culinary question into the search bar above, or click one of the quick search topics!</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: Dedicated Personalized Itinerary View -->
+                    <div id="planViewContainer" class="workspace-tab-content">
+                        <div class="itinerary-viewport" id="itineraryViewport">
+                            <div class="empty-plan-state" id="emptyPlanState">
+                                <div class="empty-icon">🗺️</div>
+                                <h3>No Itinerary Generated Yet</h3>
+                                <p>Select your state, duration, budget, and interests in the Trip Parameters panel, then click <strong>"Generate Trip with Locations & Food"</strong>.</p>
+                            </div>
+                            <div class="plan-render-area hidden" id="planRenderArea">
+                                <div class="plan-header-strip">
+                                    <div class="plan-title-info">
+                                        <h2 id="planDestinationTitle">Curated State Itinerary</h2>
+                                        <div class="plan-meta-tags" id="planMetaTags"></div>
+                                    </div>
+                                    <div class="plan-actions">
+                                        <button id="copyPlanBtn" class="btn btn-secondary btn-sm">📋 Copy Plan</button>
+                                        <button id="printPlanBtn" class="btn btn-secondary btn-sm">🖨️ Print / Save</button>
+                                    </div>
+                                </div>
+                                <div class="plan-content-markdown" id="planContentMarkdown"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Right Column: Trip Parameters & State Explorer Highlights -->
             <aside class="sidebar-column">
                 
                 <!-- 1. Trip Parameters Card -->
@@ -242,88 +326,6 @@
                 </div>
 
             </aside>
-
-            <!-- Right Column: Interactive Chat & Personalized Itinerary View -->
-            <section class="main-content-column">
-                <div class="card chat-workspace-card">
-                    <!-- Workspace Header & Tab Controls -->
-                    <div class="workspace-header">
-                        <div class="workspace-tabs">
-                            <button class="tab-btn active" id="tabChatBtn">💬 AI Travel, Location & Food Assistant</button>
-                            <button class="tab-btn" id="tabPlanBtn">📋 Day-by-Day Itinerary</button>
-                        </div>
-                        <div class="current-state-badge">
-                            <span id="activeStateBadge">📍 Andhra Pradesh</span>
-                        </div>
-                    </div>
-
-                    <!-- TAB 1: Chat View -->
-                    <div id="chatViewContainer" class="workspace-tab-content active">
-                        <!-- Quick Question Chips -->
-                        <div class="quick-prompts-bar">
-                            <span class="quick-title">Quick Search:</span>
-                            <button class="prompt-chip" data-query="List top places with their exact location, distance in km, and nearby famous food spots.">📍 Places, Locations & Food in KM</button>
-                            <button class="prompt-chip" data-query="What are the best nearby restaurants, their exact locations, and distance in km?">🍲 Nearby Food & Distances</button>
-                            <button class="prompt-chip" data-query="What are the distances and travel times between major attractions in this state?">🚗 Distances & Transit</button>
-                            <button class="prompt-chip" data-query="What is the estimated budget per day and cost breakdown?">💰 Budget in INR</button>
-                            <button class="prompt-chip" data-query="What important safety rules and temple dress codes should I know?">⚠️ Rules & Safety</button>
-                        </div>
-
-                        <!-- Chat Messages Stream -->
-                        <div class="chat-messages-stream" id="chatMessagesStream">
-                            <!-- Welcome Bot Message -->
-                            <div class="message-bubble bot-message">
-                                <div class="message-avatar">✈️</div>
-                                <div class="message-content-wrapper">
-                                    <div class="message-author">TRAVELIQ Assistant</div>
-                                    <div class="message-text">
-                                        <p>👋 Welcome to <strong>TRAVELIQ</strong>! I provide detailed travel intelligence with <strong>Exact Place Locations</strong>, <strong>Distances in Kilometers (km)</strong>, and <strong>Nearby Famous Food Spots & Restaurants</strong> across 16 iconic Indian states.</p>
-                                        <p>Select any state above or ask me about attractions, exact addresses, road distances in km, and local culinary hotspots!</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Chat Input Area -->
-                        <div class="chat-input-area">
-                            <form id="chatForm" class="chat-input-form">
-                                <div class="chat-input-wrapper">
-                                    <textarea id="chatInput" rows="1" placeholder="Search places, exact locations, distance in km, or nearby food spots..." required></textarea>
-                                    <button type="submit" id="sendBtn" class="btn btn-send" title="Send message">
-                                        <span>Send</span>
-                                        <span class="send-arrow">➔</span>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- TAB 2: Dedicated Personalized Itinerary View -->
-                    <div id="planViewContainer" class="workspace-tab-content">
-                        <div class="itinerary-viewport" id="itineraryViewport">
-                            <div class="empty-plan-state" id="emptyPlanState">
-                                <div class="empty-icon">🗺️</div>
-                                <h3>No Itinerary Generated Yet</h3>
-                                <p>Select your state, duration, budget, and interests, then click <strong>"Generate Trip with Locations & Food"</strong>.</p>
-                            </div>
-                            <div class="plan-render-area hidden" id="planRenderArea">
-                                <div class="plan-header-strip">
-                                    <div class="plan-title-info">
-                                        <h2 id="planDestinationTitle">Curated State Itinerary</h2>
-                                        <div class="plan-meta-tags" id="planMetaTags"></div>
-                                    </div>
-                                    <div class="plan-actions">
-                                        <button id="copyPlanBtn" class="btn btn-secondary btn-sm">📋 Copy Plan</button>
-                                        <button id="printPlanBtn" class="btn btn-secondary btn-sm">🖨️ Print / Save</button>
-                                    </div>
-                                </div>
-                                <div class="plan-content-markdown" id="planContentMarkdown"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </section>
         </main>
 
         <!-- Toast Container -->
