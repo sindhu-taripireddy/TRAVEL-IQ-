@@ -22,7 +22,13 @@ load_dotenv()
 from data.states_data import get_all_states, get_state_by_id, STATES_DATA
 from planner import generate_state_answer, generate_state_itinerary, get_gemini_client
 
-app = Flask(__name__)
+basedir = os.path.abspath(os.path.dirname(__file__))
+app = Flask(
+    __name__,
+    template_folder=os.path.join(basedir, "templates"),
+    static_folder=os.path.join(basedir, "static"),
+    static_url_path="/static"
+)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "traveliq-state-secret-2026")
 
 # Enable Cross-Origin Resource Sharing (CORS) for all origins

@@ -5,6 +5,15 @@
 
 ---
 
+## 🌐 Live Deployment & Links
+
+- **🚀 Live Application (Vercel)**: [https://spry-cygnus-zce51n0.tmp.now](https://spry-cygnus-zce51n0.tmp.now)
+- **🔗 Claim / Permanent Vercel Project**: [Claim Deployment Link](https://vercel.com/claim-deployment?code=6a6ebd67-e8f7-435b-bcfb-b84ace9b2a8a)
+- **📦 GitHub Repository**: [https://github.com/sindhu-taripireddy/TRAVEL-IQ-](https://github.com/sindhu-taripireddy/TRAVEL-IQ-)
+- **⚡ Status Check Endpoint**: `https://spry-cygnus-zce51n0.tmp.now/api/health`
+
+---
+
 ## 📌 Overview
 TRAVELIQ delivers instant travel intelligence, authentic food guides, budget breakdowns, transportation advice, and personalized day-by-day itineraries tailored to specific Indian states without requiring document uploads.
 
